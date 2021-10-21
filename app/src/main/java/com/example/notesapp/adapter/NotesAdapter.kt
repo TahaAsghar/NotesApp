@@ -11,7 +11,7 @@ import com.example.notesapp.R
 import com.example.notesapp.model.Note
 import com.example.notesapp.ui.viewmodel.NotesViewModel
 
-class NotesAdapter(private var viewModel: NotesViewModel) :
+class NotesAdapter(var notes: List<Note>, private var viewModel: NotesViewModel) :
     RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<Note>() {
@@ -33,7 +33,8 @@ class NotesAdapter(private var viewModel: NotesViewModel) :
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note = differ.currentList[position]
+//        val note = differ.currentList[position]
+        val note = notes[position]
 //        holder.itemView.apply {
 //
 //        }
@@ -45,7 +46,8 @@ class NotesAdapter(private var viewModel: NotesViewModel) :
     }
 
     override fun getItemCount(): Int {
-        return differ.currentList.size
+//        return differ.currentList.size
+        return notes.size
     }
 
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

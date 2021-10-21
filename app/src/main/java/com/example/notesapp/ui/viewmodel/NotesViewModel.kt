@@ -19,5 +19,5 @@ class NotesViewModel(
         repository.delete(note)
     }
 
-    fun getAllNotes(note: Note) = repository.getAllNotes()
+    fun getAllNotes() = repository.getAllNotes()
 }
