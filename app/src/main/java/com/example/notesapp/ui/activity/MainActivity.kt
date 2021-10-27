@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.adapter.NotesAdapter
+import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.db.NotesDatabase
 import com.example.notesapp.model.Note
 import com.example.notesapp.repository.NotesRepository
@@ -21,29 +22,26 @@ import com.example.notesapp.ui.viewmodel.NotesViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val db = NotesDatabase(this)
         val repository = NotesRepository(db)
         val factory = NotesViewModelFactory(repository)
 
         val viewModel = ViewModelProvider(this, factory)[NotesViewModel::class.java]
 
-        val adapter = NotesAdapter(listOf(), viewModel)
-        val recyclerView = findViewById<RecyclerView>(R.id.rvMain)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        val notesAdapter = NotesAdapter(listOf(), viewModel)
+        binding.rvMain.layoutManager = LinearLayoutManager(this)
+        binding.rvMain.adapter = notesAdapter
 
         viewModel.getAllNotes().observe(this, Observer {
-            adapter.notes = it
-            adapter.notifyDataSetChanged()
-//            Log.d("Check", "entry or not")
-//            adapter.differ.submitList(adapter.notes)
+            notesAdapter.notes = it
+            notesAdapter.notifyDataSetChanged()
         })
-        val btn = findViewById<FloatingActionButton>(R.id.fabMain)
-        btn.setOnClickListener {
+        binding.fabMain.setOnClickListener {
             AddNoteDialog(this, object : AddDialogListener {
                 override fun onAddButtonClick(note: Note) {
                     viewModel.upsert(note)
